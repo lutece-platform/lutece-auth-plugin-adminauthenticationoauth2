@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plug-in>
+    <name>adminauthenticationoauth2</name>
+    <class>fr.paris.lutece.portal.service.plugin.PluginDefaultImplementation</class>
+    <version>2.1.6</version>
+    <description>adminauthenticationoauth2.plugin.description</description>
+    <documentation/>
+    <installation/>
+    <changes/>
+    <user-guide/>
+    <provider>adminauthenticationoauth2.plugin.provider</provider>
+    <provider-url>https://lutece.paris.fr</provider-url>
+    <icon-url>images/admin/skin/plugins/mylutece/mylutece.png</icon-url>
+    <copyright>Copyright 2001-2009 Mairie de Paris</copyright>
+
+    <core-version-dependency>
+        <min-core-version/>
+        <max-core-version/>
+    </core-version-dependency>
+
+    <!-- if the plugin must have a connection pool with parameter : 1 - yes, 0 - no -->
+    <db-pool-required>0</db-pool-required>
+
+    <filters>
+        <filter>
+            <filter-name>
+                Mylutece Oauth2 Filter
+            </filter-name>
+            <filter-class>
+                fr.paris.lutece.plugins.adminauthenticationoauth2.web.AdminOauth2Filter
+            </filter-class>
+            <url-pattern>
+                /jsp/admin/*
+            </url-pattern>
+        </filter>
+        <filter>
+            <filter-name>
+                Oauth 2 Notify Lutece User
+            </filter-name>
+            <filter-class>
+                fr.paris.lutece.plugins.adminauthenticationoauth2.web.NotifyAdminUserFilter
+            </filter-class>
+            <url-pattern>
+                /plugins/adminauthenticationoauth2/notifyAdminUser
+            </url-pattern>
+        </filter>
+    </filters>
+
+    <listeners>
+        <listener>
+            <listener-class>fr.paris.lutece.plugins.adminauthenticationoauth2.service.listener.Oauth2AdminUserSessionListener
+            </listener-class>
+        </listener>
+    </listeners>
+
+</plug-in>

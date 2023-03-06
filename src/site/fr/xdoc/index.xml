@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+    <properties>
+        <title>Plugin adminauthenticationoauth2</title>
+    </properties>
+    <body>
+        <section name="Plugin adminauthenticationoauth2">
+            <subsection name="Introduction">
+                <p>
+                    Module d'authentification pour le Back Office Lutece basé sur Oauth2.
+                </p>
+            </subsection>
+        </section>
+    </body>
+</document>
