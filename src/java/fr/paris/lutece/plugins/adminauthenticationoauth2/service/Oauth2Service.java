@@ -116,15 +116,20 @@ public final class Oauth2Service
 
                             for ( int n = 0; i < tabPropertiesValues.length; n++ )
                             {
-                                ATTRIBUTE_USER_MAPPING.computeIfAbsent( tabPropertiesValues [n], k -> ATTRIBUTE_USER_MAPPING.put( k, new ArrayList<>( ) ) );
+                                if ( !ATTRIBUTE_USER_MAPPING.containsKey( tabPropertiesValues[n] ) )
+                                {
+                                    ATTRIBUTE_USER_MAPPING.put( tabPropertiesValues[n], new ArrayList<>( ) );
+                                }
                                 ATTRIBUTE_USER_MAPPING.get( tabPropertiesValues [n] ).add( tabUserProperties [i] );
                             }
 
                         }
                         else
                         {
-
-                            ATTRIBUTE_USER_MAPPING.computeIfAbsent( userProperties, k -> ATTRIBUTE_USER_MAPPING.put( k, new ArrayList<>( ) ) );
+                            if ( !ATTRIBUTE_USER_MAPPING.containsKey( userProperties ) )
+                            {
+                                ATTRIBUTE_USER_MAPPING.put( userProperties, new ArrayList<>( ) );
+                            }
                             ATTRIBUTE_USER_MAPPING.get( userProperties ).add( tabUserProperties [i] );
                         }
 
