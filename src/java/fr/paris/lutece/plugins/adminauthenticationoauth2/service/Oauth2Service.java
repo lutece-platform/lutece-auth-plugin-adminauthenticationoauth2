@@ -33,7 +33,18 @@
  */
 package fr.paris.lutece.plugins.adminauthenticationoauth2.service;
 
-import fr.paris.lutece.plugins.adminauthenticationoauth2.business.authentication.AdminOauth2Authentication;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
+
 import fr.paris.lutece.plugins.adminauthenticationoauth2.business.authentication.AdminOauth2User;
 import fr.paris.lutece.plugins.adminauthenticationoauth2.service.session.Oauth2AdminUserSessionService;
 import fr.paris.lutece.plugins.oauth2.business.Token;
@@ -42,20 +53,9 @@ import fr.paris.lutece.portal.business.user.AdminUserHome;
 import fr.paris.lutece.portal.service.admin.AccessDeniedException;
 import fr.paris.lutece.portal.service.admin.AdminAuthenticationService;
 import fr.paris.lutece.portal.service.security.UserNotSignedException;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
-import org.apache.commons.lang3.StringUtils;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * Oauth2 Service.
@@ -237,7 +237,7 @@ public final class Oauth2Service
             }
 
             // add Oauth2AdminUserSessionService session
-            Oauth2AdminUserSessionService.getInstance( ).addAdminUserSession( user.getAccessCode( ), request.getSession( true ).getId( ) );
+           // Oauth2AdminUserSessionService.getInstance( ).addAdminUserSession( user.getAccessCode( ), request.getSession( true ).getId( ) );
         }
 
         if ( user != null && user.getAccessCode( ) != null )
@@ -245,15 +245,8 @@ public final class Oauth2Service
             AdminUser bindUser = AdminUserHome.findUserByLogin( user.getAccessCode( ) );
             if ( bindUser == null )
             {
-                if ( user.getLastName( ) == null )
-                {
-                    user.setLastName( "" );
-                }
-                if ( user.getFirstName( ) == null )
-                {
-                    user.setFirstName( "" );
-                }
-                AdminUserHome.create( user );
+         
+               DefaultAdminOuth2UserService.createUser(user);
             }
             AdminAuthenticationService.getInstance( ).registerUser( request, user );
         }

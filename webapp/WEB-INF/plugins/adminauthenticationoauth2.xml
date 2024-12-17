@@ -24,7 +24,7 @@
     <filters>
         <filter>
             <filter-name>
-                Mylutece Oauth2 Filter
+                Oauth2 Admin Filter
             </filter-name>
             <filter-class>
                 fr.paris.lutece.plugins.adminauthenticationoauth2.web.AdminOauth2Filter
@@ -33,24 +33,8 @@
                 /jsp/admin/*
             </url-pattern>
         </filter>
-        <filter>
-            <filter-name>
-                Oauth 2 Notify Lutece User
-            </filter-name>
-            <filter-class>
-                fr.paris.lutece.plugins.adminauthenticationoauth2.web.NotifyAdminUserFilter
-            </filter-class>
-            <url-pattern>
-                /plugins/adminauthenticationoauth2/notifyAdminUser
-            </url-pattern>
-        </filter>
+        
     </filters>
 
-    <listeners>
-        <listener>
-            <listener-class>fr.paris.lutece.plugins.adminauthenticationoauth2.service.listener.Oauth2AdminUserSessionListener
-            </listener-class>
-        </listener>
-    </listeners>
-
+    
 </plug-in>

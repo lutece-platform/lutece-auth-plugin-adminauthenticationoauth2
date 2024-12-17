@@ -7,7 +7,7 @@
     <bean id="adminauthenticationoauth2.oauth2AdminUserSessionService" class="fr.paris.lutece.plugins.adminauthenticationoauth2.service.session.Oauth2AdminUserSessionService"/>
     <bean id="adminauthenticationoauth2.authentication" class="fr.paris.lutece.plugins.adminauthenticationoauth2.business.authentication.AdminOauth2Authentication"/>
     <bean id="adminauthenticationoauth2.authDataClient" class="fr.paris.lutece.plugins.adminauthenticationoauth2.business.authentication.AuthDataClient">
-        <property name="name" value="authData" />
+        <property name="name" value="adminAuthData" />
         <property name="default" value="true"/>
         <property name="dataServerUri" value="https://USERINFOSERVICE/auth/realms/paris/protocol/openid-connect/userinfo"/>
         <property name="tokenMethod" value="HEADER"/>
@@ -23,7 +23,7 @@
     </bean>
 
     <bean id="adminauthenticationoauth2.authDataClientJson" class="fr.paris.lutece.plugins.adminauthenticationoauth2.business.authentication.AuthDataClientJson">
-        <property name="name" value="authDataJson" />
+        <property name="name" value="adminAuthDataJson" />
         <property name="dataServerUri" value="https://USERINFOSERVICE/auth/realms/paris/protocol/openid-connect/userinfo"/>
         <property name="tokenMethod" value="HEADER"/>
         <property name="scope">
@@ -36,4 +36,13 @@
             </set>
         </property>
     </bean>
+    <!-- By default the admin user authentication system use client and server properties define in the file oauth2_context.xml -->
+    <bean id="adminauthenticationoauth2.callbackHandler" class="fr.paris.lutece.plugins.oauth2.web.CallbackHandler" >
+        <property name="handlerName" value="adminOauth2Handler"/>
+        <property name="authServerConf" ref="oauth2.server"/>
+        <property name="authClientConf" ref="oauth2.client"/>
+        <property name="jWTParser" ref="oauth2.jwtParser"/>
+    </bean> 
+    
+    
 </beans>

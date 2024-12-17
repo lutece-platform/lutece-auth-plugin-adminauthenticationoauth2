@@ -93,81 +93,88 @@ public class AdminOauth2Filter implements Filter
     {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse resp = (HttpServletResponse) response;
-        if ( request != null && "GET".equals( request.getMethod( ) ) )
+        
+        //enable filter only if the module is load
+        if( AdminAuthenticationService.getInstance().getAuthServiceName().equals(AppPropertiesService.getProperty( Oauth2Utils.PROPERTY_AUTH_SERVICE_NAME )) )
         {
-            AdminUser user = AdminUserService.getAdminUser( request );
-
-            if ( user == null && isUsePomptNoneForRequest( request ) )
-            {
-                HttpSession session = request.getSession( true );
-
-                if ( ( session.getAttribute( Oauth2Utils.SESSION_ERROR_LOGIN ) == null && request.getParameter( Oauth2Utils.PARAM_ERROR_LOGIN ) == null )
-                        || session.getAttribute( Oauth2Utils.SESSION_ERROR_LOGIN ) != null
-                                && session.getAttribute( Oauth2Utils.SESSION_ERROR_LOGIN ).equals( Oauth2Utils.REINIT_ERROR_LOGIN ) )
-                {
-                    session.setAttribute( Oauth2Utils.SESSION_ERROR_LOGIN, "" );
-                    String strRedirectLoginUrl = AdminAuthenticationService.getInstance( ).getLoginPageUrl( );
-
-                    resp.sendRedirect( strRedirectLoginUrl );
-
-                    return;
-                }
-
-                session.setAttribute( Oauth2Utils.SESSION_ERROR_LOGIN, Oauth2Utils.REINIT_ERROR_LOGIN );
-            }
-            else
-                if ( _bValidateRefreshToken && user instanceof AdminOauth2User )
-                {
-                    AdminOauth2User oauth2User = (AdminOauth2User) user;
-                    if ( oauth2User.getToken( ) != null && oauth2User.getToken( ).getRefreshToken( ) != null )
-                    {
-                        Token token = TokenService.getService( ).getTokenByRefreshToken( oauth2User.getToken( ).getRefreshToken( ) );
-                        if ( token == null )
-                        {
-
-                            AdminAuthenticationService.getInstance( ).logoutUser( request );
-                        }
-                        else
-                        {
-                            oauth2User.setToken( token );
-                        }
-                    }
-                    else
-                    {
-                        AdminAuthenticationService.getInstance( ).logoutUser( request );
-                    }
-                }
-            if ( !Oauth2AdminUserSessionService.getInstance( ).isAdminUserUpToDate( request.getSession( true ).getId( ) ) )
-            {
-
-                AdminOauth2Authentication oauth2Authentication = SpringContextService.getBean( "adminauthenticationoauth2.authentication" );
-                user = oauth2Authentication.getHttpAuthenticatedUser( request );
-
-                if ( user != null && user.getAccessCode( ) != null )
-                {
-                    AdminUser bindUser = AdminUserHome.findUserByLogin( user.getAccessCode( ) );
-                    if ( bindUser == null )
-                    {
-                        if ( user.getLastName( ) == null )
-                        {
-                            user.setLastName( "" );
-                        }
-                        if ( user.getFirstName( ) == null )
-                        {
-                            user.setFirstName( "" );
-                        }
-                        AdminUserHome.create( user );
-                    }
-                }
-                try
-                {
-                    AdminAuthenticationService.getInstance( ).registerUser( request, user );
-                }
-                catch( AccessDeniedException | UserNotSignedException e )
-                {
-                    throw new RuntimeException( e );
-                }
-            }
+        
+	        if (    request != null && "GET".equals( request.getMethod( ) ) )
+	        {
+	            AdminUser user = AdminUserService.getAdminUser( request );
+	
+	            if ( user == null && isUsePomptNoneForRequest( request ) )
+	            {
+	                HttpSession session = request.getSession( true );
+	
+	                if ( ( session.getAttribute( Oauth2Utils.SESSION_ERROR_LOGIN ) == null && request.getParameter( Oauth2Utils.PARAM_ERROR_LOGIN ) == null )
+	                        || session.getAttribute( Oauth2Utils.SESSION_ERROR_LOGIN ) != null
+	                                && session.getAttribute( Oauth2Utils.SESSION_ERROR_LOGIN ).equals( Oauth2Utils.REINIT_ERROR_LOGIN ) )
+	                {
+	                    session.setAttribute( Oauth2Utils.SESSION_ERROR_LOGIN, "" );
+	                    String strRedirectLoginUrl = AdminAuthenticationService.getInstance( ).getLoginPageUrl( );
+	
+	                    resp.sendRedirect( strRedirectLoginUrl );
+	
+	                    return;
+	                }
+	
+	                session.setAttribute( Oauth2Utils.SESSION_ERROR_LOGIN, Oauth2Utils.REINIT_ERROR_LOGIN );
+	            }
+	            else
+	                if ( _bValidateRefreshToken && user instanceof AdminOauth2User )
+	                {
+	                    AdminOauth2User oauth2User = (AdminOauth2User) user;
+	                    if ( oauth2User.getToken( ) != null && oauth2User.getToken( ).getRefreshToken( ) != null )
+	                    {
+	                        Token token = TokenService.getService( ).getTokenByRefreshToken( oauth2User.getToken( ).getRefreshToken( ) );
+	                        if ( token == null )
+	                        {
+	
+	                            AdminAuthenticationService.getInstance( ).logoutUser( request );
+	                        }
+	                        else
+	                        {
+	                            oauth2User.setToken( token );
+	                        }
+	                    }
+	                    else
+	                    {
+	                        AdminAuthenticationService.getInstance( ).logoutUser( request );
+	                    }
+	                }
+	//            if ( !Oauth2AdminUserSessionService.getInstance( ).isAdminUserUpToDate( request.getSession( true ).getId( ) ) )
+	//            {
+	//
+	//                AdminOauth2Authentication oauth2Authentication = SpringContextService.getBean( "adminauthenticationoauth2.authentication" );
+	//                user = oauth2Authentication.getHttpAuthenticatedUser( request );
+	//
+	//                if ( user != null && user.getAccessCode( ) != null )
+	//                {
+	//                    AdminUser bindUser = AdminUserHome.findUserByLogin( user.getAccessCode( ) );
+	//                    if ( bindUser == null )
+	//                    {
+	//                        if ( user.getLastName( ) == null )
+	//                        {
+	//                            user.setLastName( "" );
+	//                        }
+	//                        if ( user.getFirstName( ) == null )
+	//                        {
+	//                            user.setFirstName( "" );
+	//                        }
+	//                        AdminUserHome.create( user );
+	//                    }
+	//                }
+	//                try
+	//                {
+	//                    AdminAuthenticationService.getInstance( ).registerUser( request, user );
+	//                }
+	//                catch( AccessDeniedException | UserNotSignedException e )
+	//                {
+	//                    throw new RuntimeException( e );
+	//                }
+	//            }
+	            
+	        }
 
         }
 

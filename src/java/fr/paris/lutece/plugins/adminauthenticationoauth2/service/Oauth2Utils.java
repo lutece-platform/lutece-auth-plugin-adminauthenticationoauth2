@@ -69,6 +69,7 @@ public final class Oauth2Utils
     public static final String OAUTH2_VIEW_ACCOUNT_URL = "adminauthenticationoauth2.url.viewAccount";
     public static final String OAUTH2_LOST_PASSWORD_URL = "adminauthenticationoauth2.url.lostPassword";
     public static final String OAUTH2_LOST_LOGIN_URL = "adminauthenticationoauth2.url.lostLogin";
+    public static final String OAUTH2_LOGIN_URL="adminauthenticationoauth2.url.login.page";
 
     // Other properties names
     public static final String PROPERTY_AUTH_SERVICE_NAME = "adminauthenticationoauth2.service.name";

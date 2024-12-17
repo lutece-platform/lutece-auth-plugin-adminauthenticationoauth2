@@ -33,7 +33,13 @@
  */
 package fr.paris.lutece.plugins.adminauthenticationoauth2.web;
 
-import fr.paris.lutece.plugins.adminauthenticationoauth2.service.session.Oauth2AdminUserSessionService;
+import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import fr.paris.lutece.plugins.adminauthenticationoauth2.service.Oauth2Utils;
 import fr.paris.lutece.portal.business.user.AdminUser;
 import fr.paris.lutece.portal.service.admin.AdminAuthenticationService;
@@ -41,12 +47,6 @@ import fr.paris.lutece.portal.service.security.AccessLogService;
 import fr.paris.lutece.portal.service.security.AccessLoggerConstants;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 public class Oauth2AuthenticationJspBean implements Serializable
 {
@@ -67,7 +67,7 @@ public class Oauth2AuthenticationJspBean implements Serializable
 
         if ( session != null )
         {
-            Oauth2AdminUserSessionService.getInstance( ).removeAdminUserSession( session.getId( ) );
+            //Oauth2AdminUserSessionService.getInstance( ).removeAdminUserSession( session.getId( ) );
             AdminAuthenticationService.getInstance( ).unregisterUser( request );
         }
 

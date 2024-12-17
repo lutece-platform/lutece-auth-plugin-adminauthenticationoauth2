@@ -134,7 +134,7 @@ public class AdminOauth2Authentication implements AdminAuthentication
     @Override
     public boolean isExternalAuthentication( )
     {
-        return true;
+        return false;
     }
 
     @Override
@@ -182,7 +182,7 @@ public class AdminOauth2Authentication implements AdminAuthentication
     @Override
     public String getLoginPageUrl( )
     {
-        return Oauth2Utils.getAuthClientConf( ).getRedirectUri( );
+        return AppPropertiesService.getProperty(Oauth2Utils.OAUTH2_LOGIN_URL,Oauth2Utils.getAuthClientConf( ).getRedirectUri( ));
     }
 
     @Override
