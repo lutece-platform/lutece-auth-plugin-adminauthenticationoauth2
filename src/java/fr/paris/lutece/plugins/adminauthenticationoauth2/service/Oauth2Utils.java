@@ -46,8 +46,8 @@ public final class Oauth2Utils
 {
     // Beans properties names
     public static final String AUTHENTICATION_BEAN_NAME = "adminauthenticationoauth2.authentication";
-    private static final String BEAN_AUTH_SERVER_CONF = "oauth2.server";
-    private static final String BEAN_AUTH_CLIENT_CONF = "oauth2.client";
+    private static final String BEAN_AUTH_SERVER_CONF = "adminauthenticationoauth2.server";
+    private static final String BEAN_AUTH_CLIENT_CONF = "adminauthenticationoauth2.client";
 
 
     // OAuth2 properties names
