@@ -68,6 +68,8 @@ package fr.paris.lutece.plugins.adminauthenticationoauth2.business.authenticatio
 
 import fr.paris.lutece.plugins.adminauthenticationoauth2.service.Oauth2Service;
 import fr.paris.lutece.plugins.adminauthenticationoauth2.service.Oauth2Utils;
+import fr.paris.lutece.plugins.oauth2.business.AuthClientConf;
+import fr.paris.lutece.plugins.oauth2.business.AuthServerConf;
 import fr.paris.lutece.plugins.oauth2.business.Token;
 import fr.paris.lutece.plugins.oauth2.service.DataClientService;
 import fr.paris.lutece.plugins.oauth2.service.TokenService;
@@ -89,88 +91,76 @@ import java.util.Map;
 /**
  * Data authentication module for admin authentication
  */
-public class AdminOauth2Authentication implements AdminAuthentication
-{
+public class AdminOauth2Authentication implements AdminAuthentication {
 
     /**
      *
      */
-    public AdminOauth2Authentication( )
-    {
-        super( );
+    public AdminOauth2Authentication() {
+        super();
     }
 
     @Override
-    public String getAuthServiceName( )
-    {
-        return AppPropertiesService.getProperty( Oauth2Utils.PROPERTY_AUTH_SERVICE_NAME );
+    public String getAuthServiceName() {
+        return AppPropertiesService.getProperty(Oauth2Utils.PROPERTY_AUTH_SERVICE_NAME);
     }
 
     @Override
-    public String getAuthType( HttpServletRequest request )
-    {
+    public String getAuthType(HttpServletRequest request) {
         return HttpServletRequest.BASIC_AUTH;
     }
 
     @Override
-    public AdminUser login( String strAccessCode, String strUserPassword, HttpServletRequest request )
-    {
+    public AdminUser login(String strAccessCode, String strUserPassword, HttpServletRequest request) {
         // There is no login required : the user is supposed to be already authenticated
-        return getHttpAuthenticatedUser( request );
+        return getHttpAuthenticatedUser(request);
     }
 
     @Override
-    public void logout( AdminUser user )
-    {
+    public void logout(AdminUser user) {
         // TODO Auto-generated method stub
     }
 
     @Override
-    public AdminUser getAnonymousUser( )
-    {
-        throw new UnsupportedOperationException( "La methode getAnonymousUser() n'est pas encore implementee." );
+    public AdminUser getAnonymousUser() {
+        throw new UnsupportedOperationException("La methode getAnonymousUser() n'est pas encore implementee.");
     }
 
     @Override
-    public boolean isExternalAuthentication( )
-    {
+    public boolean isExternalAuthentication() {
         return false;
     }
 
     @Override
-    public AdminUser getHttpAuthenticatedUser( HttpServletRequest request )
-    {
+    public AdminUser getHttpAuthenticatedUser(HttpServletRequest request) {
         AdminUser user = null;
-        user = AdminUserService.getAdminUser( request );
+        user = AdminUserService.getAdminUser(request);
 
-        if ( user == null )
-        {
-            HttpSession session = request.getSession( true );
-            session.setAttribute( "luteceAdminLoginNextUrl", getLoginPageUrl( ) );
+        if (user == null) {
+            HttpSession session = request.getSession(true);
+            session.setAttribute("luteceAdminLoginNextUrl", getLoginPageUrl());
             return null;
         }
 
         // Reload User if info
-        if ( user instanceof AdminOauth2User )
-        {
+        if (user instanceof AdminOauth2User) {
             AdminOauth2User userOauth = (AdminOauth2User) user;
-            if ( userOauth.getToken( ).getRefreshToken( ) != null )
-            {
-                AuthDataClient authDataClient = (AuthDataClient) DataClientService.instance( ).getClient( Oauth2Utils.AUTH_DATA_CLIENT_NAME );
-                Token token = TokenService.getService( ).getTokenByRefreshToken( userOauth.getToken( ).getRefreshToken( ) );
-                try
-                {
-                    Map<String, Object> mapUserInfo = authDataClient.parse( authDataClient.getData( token ) );
-                    return Oauth2Service.getInstance( ).processAuthentication( request, mapUserInfo, token );
-                }
-                catch( IOException e )
-                {
-                    AppLogService.error( "error during retrieving user info with refresh token  ", e );
-                }
-                catch( AccessDeniedException | UserNotSignedException e )
-                {
-                    // Not an error : the user is not authenticated or does not have the rights to access the application
-                    throw new RuntimeException( e );
+            if (userOauth.getToken().getRefreshToken() != null) {
+                AuthDataClient authDataClient = (AuthDataClient) DataClientService.instance()
+                        .getClient(Oauth2Utils.AUTH_DATA_CLIENT_NAME);
+                AuthServerConf authServerConf = Oauth2Utils.getAuthServerConf();
+                AuthClientConf authClientConf = Oauth2Utils.getAuthClientConf();
+                Token token = TokenService.getService().getTokenByRefreshToken(authClientConf, authServerConf,
+                        userOauth.getToken().getRefreshToken());
+                try {
+                    Map<String, Object> mapUserInfo = authDataClient.parse(authDataClient.getData(token));
+                    return Oauth2Service.getInstance().processAuthentication(request, mapUserInfo, token);
+                } catch (IOException e) {
+                    AppLogService.error("error during retrieving user info with refresh token  ", e);
+                } catch (AccessDeniedException | UserNotSignedException e) {
+                    // Not an error : the user is not authenticated or does not have the rights to
+                    // access the application
+                    throw new RuntimeException(e);
                 }
 
             }
@@ -180,63 +170,54 @@ public class AdminOauth2Authentication implements AdminAuthentication
     }
 
     @Override
-    public String getLoginPageUrl( )
-    {
-        return AppPropertiesService.getProperty(Oauth2Utils.OAUTH2_LOGIN_URL,Oauth2Utils.getAuthClientConf( ).getRedirectUri( ));
+    public String getLoginPageUrl() {
+        return AppPropertiesService.getProperty(Oauth2Utils.OAUTH2_LOGIN_URL,
+                Oauth2Utils.getAuthClientConf().getRedirectUri());
     }
 
     @Override
-    public String getChangePasswordPageUrl( )
-    {
-        return AppPropertiesService.getProperty(Oauth2Utils.OAUTH2_CHANGE_PASSWORD_URL,null);
+    public String getChangePasswordPageUrl() {
+        return AppPropertiesService.getProperty(Oauth2Utils.OAUTH2_CHANGE_PASSWORD_URL, null);
     }
 
     @Override
-    public String getDoLoginUrl( )
-    {
-        return getLoginPageUrl( );
+    public String getDoLoginUrl() {
+        return getLoginPageUrl();
     }
 
     @Override
-    public String getDoLogoutUrl( )
-    {
-        return Oauth2Utils.getAuthServerConf( ).getLogoutEndpointUri( );
+    public String getDoLogoutUrl() {
+        return Oauth2Utils.getAuthServerConf().getLogoutEndpointUri();
     }
 
     @Override
-    public String getNewAccountPageUrl( )
-    {
-        return AppPropertiesService.getProperty(Oauth2Utils.OAUTH2_NEW_ACCOUNT_URL,null);
+    public String getNewAccountPageUrl() {
+        return AppPropertiesService.getProperty(Oauth2Utils.OAUTH2_NEW_ACCOUNT_URL, null);
     }
 
     @Override
-    public String getViewAccountPageUrl( )
-    {
-        return AppPropertiesService.getProperty(Oauth2Utils.OAUTH2_VIEW_ACCOUNT_URL,null);
+    public String getViewAccountPageUrl() {
+        return AppPropertiesService.getProperty(Oauth2Utils.OAUTH2_VIEW_ACCOUNT_URL, null);
     }
 
     @Override
-    public String getLostPasswordPageUrl( )
-    {
-        return AppPropertiesService.getProperty(Oauth2Utils.OAUTH2_LOST_PASSWORD_URL,null);
+    public String getLostPasswordPageUrl() {
+        return AppPropertiesService.getProperty(Oauth2Utils.OAUTH2_LOST_PASSWORD_URL, null);
     }
 
     @Override
-    public String getLostLoginPageUrl( )
-    {
-        return AppPropertiesService.getProperty(Oauth2Utils.OAUTH2_LOST_LOGIN_URL,null);
+    public String getLostLoginPageUrl() {
+        return AppPropertiesService.getProperty(Oauth2Utils.OAUTH2_LOST_LOGIN_URL, null);
     }
 
     @Override
-    public Collection<AdminUser> getUserList( String s, String s1, String s2 )
-    {
+    public Collection<AdminUser> getUserList(String s, String s1, String s2) {
         // TODO Auto-generated method stub
-        return new ArrayList<>( );
+        return new ArrayList<>();
     }
 
     @Override
-    public AdminUser getUserPublicData( String strId )
-    {
+    public AdminUser getUserPublicData(String strId) {
         // TODO Auto-generated method stub
         return null;
     }
