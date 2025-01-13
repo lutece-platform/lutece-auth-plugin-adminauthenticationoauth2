@@ -75,8 +75,13 @@ public class Oauth2AuthenticationJspBean implements Serializable
 
         try
         {
-            strLogoutUrl.append( "?redirect_uri=" )
-                    .append( URLEncoder.encode( AppPathService.getAbsoluteUrl( request, AppPathService.getAdminMenuUrl( ) ), "UTF-8" ) );
+            String redirect = "?redirect_uri=";
+            if (strLogoutUrl.toString().contains(redirect)) {
+                AppLogService.info("redirect is already present in the logout url");
+            } else {
+                strLogoutUrl.append( redirect )
+                        .append( URLEncoder.encode( AppPathService.getAbsoluteUrl( request, AppPathService.getAdminMenuUrl( ) ), "UTF-8" ) );
+            }
         }
         catch( UnsupportedEncodingException e )
         {
