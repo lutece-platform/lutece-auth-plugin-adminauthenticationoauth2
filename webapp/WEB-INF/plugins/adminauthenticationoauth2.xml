@@ -1,8 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<plug-in>
+<?xml version="1.0" encoding="UTF-8"?><plug-in>
     <name>adminauthenticationoauth2</name>
     <class>fr.paris.lutece.portal.service.plugin.PluginDefaultImplementation</class>
-    <version>2.1.6</version>
+    <version>1.0.0</version>
     <description>adminauthenticationoauth2.plugin.description</description>
     <documentation/>
     <installation/>
